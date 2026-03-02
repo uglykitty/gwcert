@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=GWCert
+Name[zh_CN]=GWCert 证书管理工具
+GenericName=Certificate Manager
+GenericName[zh_CN]=证书管理工具
+Comment=PKI certificate management tool built with Qt 6 + OpenSSL
+Comment[zh_CN]=基于 Qt 6 + OpenSSL 的 PKI 证书管理工具
+Exec=gwcert
+Icon=gwcert
+Terminal=false
+Type=Application
+Categories=Utility;Security;
+Keywords=certificate;pki;ssl;tls;openssl;x509;
