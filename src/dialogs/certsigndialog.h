@@ -26,6 +26,9 @@ public:
     /// Pre-fill the CSR path field
     void setCSRPath(const QString &path);
 
+private:
+    void updateOutputFromCSR(const QString &csrPath);
+
 private slots:
     void onBrowseCSR();
     void onBrowseCACert();

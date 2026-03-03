@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
+#include <QFileInfo>
 #include <QDialogButtonBox>
 #include <QLabel>
 
@@ -139,7 +140,10 @@ void CertSignDialog::onBrowseCSR()
     QString path = QFileDialog::getOpenFileName(this, tr("Select CSR File"),
                         QDir::currentPath(),
                         tr("CSR Files (*.csr *.pem);;All Files (*)"));
-    if (!path.isEmpty()) m_csrPathEdit->setText(path);
+    if (!path.isEmpty()) {
+        m_csrPathEdit->setText(path);
+        updateOutputFromCSR(path);
+    }
 }
 
 void CertSignDialog::onBrowseCACert()
@@ -253,4 +257,19 @@ void CertSignDialog::onSign()
 void CertSignDialog::setCSRPath(const QString &path)
 {
     m_csrPathEdit->setText(path);
+    updateOutputFromCSR(path);
+}
+
+void CertSignDialog::updateOutputFromCSR(const QString &csrPath)
+{
+    if (csrPath.isEmpty())
+        return;
+    QFileInfo csrInfo(csrPath);
+    QString baseName = csrInfo.completeBaseName();
+    QString outDir;
+    if (m_store && m_store->isValid())
+        outDir = m_store->certsDir();
+    else
+        outDir = csrInfo.absolutePath();
+    m_outPathEdit->setText(outDir + "/" + baseName + ".crt");
 }
