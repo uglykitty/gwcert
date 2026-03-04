@@ -117,9 +117,9 @@ CertSignDialog::CertSignDialog(PkiStore *store, QWidget *parent)
     auto *outRow = new QHBoxLayout();
     m_outPathEdit = new QLineEdit(this);
     if (m_store && m_store->isValid())
-        m_outPathEdit->setText(m_store->certsDir() + "/signed-cert.pem");
+        m_outPathEdit->setText(m_store->certsDir() + "/signed-cert.crt");
     else
-        m_outPathEdit->setText(QDir::currentPath() + "/signed-cert.pem");
+        m_outPathEdit->setText(QDir::currentPath() + "/signed-cert.crt");
     auto *outBtn = new QPushButton(tr("Browse..."), this);
     connect(outBtn, &QPushButton::clicked, this, &CertSignDialog::onBrowseOutput);
     outRow->addWidget(m_outPathEdit);
