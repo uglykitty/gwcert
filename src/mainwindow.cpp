@@ -666,6 +666,7 @@ void MainWindow::onViewIndex()
 
     QDialog dlg(this);
     dlg.setWindowTitle(tr("Certificate Database (index.txt)"));
+    dlg.setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowMinimizeButtonHint);
     dlg.setMinimumSize(800, 400);
 
     auto *layout = new QVBoxLayout(&dlg);
