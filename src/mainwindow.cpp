@@ -829,21 +829,18 @@ void MainWindow::onTreeContextMenu(const QPoint &pos)
                     ? tr("Export Key...") : tr("Export Certificate...");
                 QAction *actExport = menu.addAction(exportLabel);
                 connect(actExport, &QAction::triggered, this, [this, path, displayName, type]() {
-                    QString destDir = QFileDialog::getExistingDirectory(this,
-                        tr("Select Export Directory"), QDir::homePath());
-                    if (destDir.isEmpty()) return;
-
-                    QString fileName = (type == tr("Private Key"))
+                    QString defaultName = (type == tr("Private Key"))
                         ? QFileInfo(path).fileName()
                         : QFileInfo(displayName).fileName();
-                    QString destFile = destDir + "/" + fileName;
+                    QString defaultPath = QDir::homePath() + "/" + defaultName;
 
-                    if (QFile::exists(destFile)) {
-                        auto ret = QMessageBox::question(this, tr("File Exists"),
-                            tr("File \"%1\" already exists. Overwrite?").arg(fileName));
-                        if (ret != QMessageBox::Yes) return;
+                    QString destFile = QFileDialog::getSaveFileName(this,
+                        (type == tr("Private Key")) ? tr("Export Key") : tr("Export Certificate"),
+                        defaultPath);
+                    if (destFile.isEmpty()) return;
+
+                    if (QFile::exists(destFile))
                         QFile::remove(destFile);
-                    }
                     if (QFile::copy(path, destFile)) {
                         appendLog(tr("Exported: ") + destFile);
                         QMessageBox::information(this, tr("Export Successful"),
