@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  BUILD_TYPE: Release
+  APP_NAME: gwcert
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64'
+          archives: 'qtbase qttools'
+
+      - name: Bootstrap vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git vcpkg
+          .\vcpkg\bootstrap-vcpkg.bat
+          .\vcpkg\vcpkg.exe install openssl:x64-windows
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          cmake -B build `
+            -G "Visual Studio 17 2022" `
+            -A x64 `
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DCMAKE_PREFIX_PATH="${env:QT_ROOT_DIR}" `
+            -DOPENSSL_ROOT_DIR="${{ github.workspace }}\vcpkg\installed\x64-windows"
+
+      - name: Build
+        shell: pwsh
+        run: cmake --build build --config ${{ env.BUILD_TYPE }}
+
+      - name: Test
+        working-directory: build
+        shell: pwsh
+        run: ctest -C ${{ env.BUILD_TYPE }} --output-on-failure
+
+      - name: Install
+        shell: pwsh
+        run: cmake --install build --config ${{ env.BUILD_TYPE }} --prefix install
+
+      - name: Package zip
+        shell: pwsh
+        run: |
+          $assetName = "${{ env.APP_NAME }}-${{ github.ref_name }}-windows-x64-msvc.zip"
+          Compress-Archive -Path .\install\* -DestinationPath $assetName -Force
+          "ASSET_NAME=$assetName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $tagName = "${{ github.ref_name }}"
+          gh release view $tagName *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tagName --title $tagName --generate-notes
+          }
+          gh release upload $tagName $env:ASSET_NAME --clobber

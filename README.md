@@ -57,6 +57,21 @@ cmake --preset linux-debug
 cmake --build out/build/linux-debug
 ```
 
+## GitHub Release 自动发布
+
+仓库已配置 GitHub Actions 工作流 [`.github/workflows/release.yml`](.github/workflows/release.yml)：
+
+- 当推送符合 `v*` 的 tag（如 `v1.0.0`）时，会自动执行构建、测试、安装、打包
+- 发布环境为 `windows-latest`，使用 `MSVC 2022 x64` 编译
+- 打包结果会上传到 GitHub Release，文件名格式为 `gwcert-<tag>-windows-x64-msvc.zip`
+
+示例：
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
 ---
 
 ## CA 管理者

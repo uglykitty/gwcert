@@ -69,99 +69,112 @@ set(_vcpkg_bin "${CMAKE_PREFIX_PATH}/bin")
 set(_mingw_gcc_dir "/usr/lib/gcc/x86_64-w64-mingw32/13-win32")
 set(_mingw_usr_dir "/usr/x86_64-w64-mingw32/lib")
 set(_objdump "${CMAKE_OBJDUMP}")
-install(CODE "
-  # Windows system DLLs to skip (case-insensitive matching)
-  set(_system_dlls
-    KERNEL32 USER32 GDI32 MSVCRT ADVAPI32 SHELL32 OLE32 OLEAUT32
-    WS2_32 MSWSOCK NTDLL SECUR32 WINMM SETUPAPI CFGMGR32 IMM32
-    VERSION SHLWAPI DWMAPI UXTHEME USERENV WTSAPI32 NETAPI32
-    IPHLPAPI DNSAPI CRYPT32 BCRYPT WLDAP32 COMCTL32 COMDLG32
-    DBGHELP PSAPI MPR RPCRT4 SECHOST WINSPOOL
-    AUTHZ D3D11 D3D12 DWRITE DXGI D3D9 DXVA2 EVR MF MFPLAT
-    OPENGL32 GLU32 XINPUT1_4 PROPSYS
-  )
-
-  set(_search_dirs
-    \"${_vcpkg_bin}\"
-    \"${_mingw_gcc_dir}\"
-    \"${_mingw_usr_dir}\"
-  )
-
-  # Recursive function to resolve DLL dependencies via objdump
-  function(resolve_deps binary resolved_var)
-    set(_stack \"\${binary}\")
-    set(_all_resolved \"\")
-    set(_visited \"\")
-
-    while(_stack)
-      list(POP_FRONT _stack _current)
-
-      # Get DLL imports
-      execute_process(
-        COMMAND \"${_objdump}\" -p \"\${_current}\"
-        OUTPUT_VARIABLE _objdump_out
-        ERROR_QUIET
-        OUTPUT_STRIP_TRAILING_WHITESPACE
+if(MINGW)
+    install(CODE "
+      # Windows system DLLs to skip (case-insensitive matching)
+      set(_system_dlls
+        KERNEL32 USER32 GDI32 MSVCRT ADVAPI32 SHELL32 OLE32 OLEAUT32
+        WS2_32 MSWSOCK NTDLL SECUR32 WINMM SETUPAPI CFGMGR32 IMM32
+        VERSION SHLWAPI DWMAPI UXTHEME USERENV WTSAPI32 NETAPI32
+        IPHLPAPI DNSAPI CRYPT32 BCRYPT WLDAP32 COMCTL32 COMDLG32
+        DBGHELP PSAPI MPR RPCRT4 SECHOST WINSPOOL
+        AUTHZ D3D11 D3D12 DWRITE DXGI D3D9 DXVA2 EVR MF MFPLAT
+        OPENGL32 GLU32 XINPUT1_4 PROPSYS
       )
-      string(REGEX MATCHALL \"DLL Name: [^ \\t\\r\\n]+\" _matches \"\${_objdump_out}\")
 
-      foreach(_match IN LISTS _matches)
-        string(REGEX REPLACE \"DLL Name: \" \"\" _dll \"\${_match}\")
-        # Skip if already visited
-        list(FIND _visited \"\${_dll}\" _idx)
-        if(NOT _idx EQUAL -1)
-          continue()
-        endif()
-        list(APPEND _visited \"\${_dll}\")
+      set(_search_dirs
+        \"${_vcpkg_bin}\"
+        \"${_mingw_gcc_dir}\"
+        \"${_mingw_usr_dir}\"
+      )
 
-        # Skip system DLLs
-        string(REGEX REPLACE \"\\\\.dll\$\" \"\" _dll_base \"\${_dll}\")
-        string(TOUPPER \"\${_dll_base}\" _dll_upper)
-        list(FIND _system_dlls \"\${_dll_upper}\" _sys_idx)
-        if(NOT _sys_idx EQUAL -1)
-          continue()
-        endif()
-        # Skip api-ms-* and ext-ms-*
-        string(REGEX MATCH \"^(api-ms-|ext-ms-)\" _api_match \"\${_dll}\")
-        if(_api_match)
-          continue()
-        endif()
+      # Recursive function to resolve DLL dependencies via objdump
+      function(resolve_deps binary resolved_var)
+        set(_stack \"\${binary}\")
+        set(_all_resolved \"\")
+        set(_visited \"\")
 
-        # Search in known directories
-        set(_found \"\")
-        foreach(_dir IN LISTS _search_dirs)
-          if(EXISTS \"\${_dir}/\${_dll}\")
-            set(_found \"\${_dir}/\${_dll}\")
-            break()
-          endif()
-        endforeach()
+        while(_stack)
+          list(POP_FRONT _stack _current)
 
-        if(_found)
-          list(APPEND _all_resolved \"\${_found}\")
-          list(APPEND _stack \"\${_found}\")
-        else()
-          message(WARNING \"Unresolved runtime dependency: \${_dll}\")
-        endif()
+          # Get DLL imports
+          execute_process(
+            COMMAND \"${_objdump}\" -p \"\${_current}\"
+            OUTPUT_VARIABLE _objdump_out
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+          )
+          string(REGEX MATCHALL \"DLL Name: [^ \\t\\r\\n]+\" _matches \"\${_objdump_out}\")
+
+          foreach(_match IN LISTS _matches)
+            string(REGEX REPLACE \"DLL Name: \" \"\" _dll \"\${_match}\")
+            list(FIND _visited \"\${_dll}\" _idx)
+            if(NOT _idx EQUAL -1)
+              continue()
+            endif()
+            list(APPEND _visited \"\${_dll}\")
+
+            string(REGEX REPLACE \"\\\\.dll\$\" \"\" _dll_base \"\${_dll}\")
+            string(TOUPPER \"\${_dll_base}\" _dll_upper)
+            list(FIND _system_dlls \"\${_dll_upper}\" _sys_idx)
+            if(NOT _sys_idx EQUAL -1)
+              continue()
+            endif()
+
+            string(REGEX MATCH \"^(api-ms-|ext-ms-)\" _api_match \"\${_dll}\")
+            if(_api_match)
+              continue()
+            endif()
+
+            set(_found \"\")
+            foreach(_dir IN LISTS _search_dirs)
+              if(EXISTS \"\${_dir}/\${_dll}\")
+                set(_found \"\${_dir}/\${_dll}\")
+                break()
+              endif()
+            endforeach()
+
+            if(_found)
+              list(APPEND _all_resolved \"\${_found}\")
+              list(APPEND _stack \"\${_found}\")
+            else()
+              message(WARNING \"Unresolved runtime dependency: \${_dll}\")
+            endif()
+          endforeach()
+        endwhile()
+
+        list(REMOVE_DUPLICATES _all_resolved)
+        set(\${resolved_var} \"\${_all_resolved}\" PARENT_SCOPE)
+      endfunction()
+
+      resolve_deps(\"${_exe_path}\" _all_deps)
+
+      foreach(_dep IN LISTS _all_deps)
+        file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\"
+          TYPE SHARED_LIBRARY FILES \"\${_dep}\")
       endforeach()
-    endwhile()
 
-    list(REMOVE_DUPLICATES _all_resolved)
-    set(\${resolved_var} \"\${_all_resolved}\" PARENT_SCOPE)
-  endfunction()
+      list(LENGTH _all_deps _dep_count)
+      message(STATUS \"Installed \${_dep_count} runtime dependencies.\")
+    ")
+elseif(WIN32)
+    qt_generate_deploy_app_script(
+        TARGET gwcert
+        OUTPUT_SCRIPT gwcert_deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
+    )
+    install(SCRIPT ${gwcert_deploy_script})
 
-  resolve_deps(\"${_exe_path}\" _all_deps)
-
-  foreach(_dep IN LISTS _all_deps)
-    file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\"
-      TYPE SHARED_LIBRARY FILES \"\${_dep}\")
-  endforeach()
-
-  list(LENGTH _all_deps _dep_count)
-  message(STATUS \"Installed \${_dep_count} runtime dependencies.\")
-")
+    file(GLOB _openssl_runtime_dlls
+        "${OPENSSL_ROOT_DIR}/bin/*.dll"
+    )
+    if(_openssl_runtime_dlls)
+        install(FILES ${_openssl_runtime_dlls} DESTINATION bin)
+    endif()
+endif()
 
 # Install Qt platform plugins (required for Qt GUI apps on Windows)
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if(MINGW)
     set(_qt_plugins_dir "${CMAKE_PREFIX_PATH}/Qt6/plugins")
     install(FILES "${_qt_plugins_dir}/platforms/qwindows.dll"
         DESTINATION bin/platforms OPTIONAL)

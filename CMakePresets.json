@@ -27,6 +27,17 @@
                 "OPENSSL_ROOT_DIR": "/data/repos/vcpkg/installed/x64-mingw-dynamic",
                 "CMAKE_OBJDUMP": "/usr/bin/x86_64-w64-mingw32-objdump"
             }
+        },
+        {
+            "name": "x64-msvc-release",
+            "displayName": "x64 MSVC Release",
+            "description": "Windows x64 release build with MSVC and Qt/OpenSSL provided via CMAKE_PREFIX_PATH",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ]
 }
