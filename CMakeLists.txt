@@ -169,6 +169,7 @@ elseif(WIN32)
         "${OPENSSL_ROOT_DIR}/bin/*.dll"
     )
     if(_openssl_runtime_dlls)
+        file(TO_CMAKE_PATH "${_openssl_runtime_dlls}" _openssl_runtime_dlls)
         install(FILES ${_openssl_runtime_dlls} DESTINATION bin)
     endif()
 endif()
