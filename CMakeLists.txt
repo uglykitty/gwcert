@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(gwcert VERSION 1.0.5 LANGUAGES CXX)
+project(gwcert VERSION 1.0.6 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,6 +39,11 @@ set(RESOURCES
     resources/resources.qrc
 )
 
+set(PLATFORM_SOURCES)
+if(WIN32)
+    list(APPEND PLATFORM_SOURCES resources/gwcert.rc)
+endif()
+
 # ── Translations (i18n) ──
 set(TS_FILES
     translations/gwcert_zh_CN.ts
@@ -46,7 +51,19 @@ set(TS_FILES
 
 qt6_add_translation(QM_FILES ${TS_FILES})
 
-add_executable(gwcert ${SOURCES} ${HEADERS} ${RESOURCES} ${QM_FILES})
+add_executable(gwcert
+    ${SOURCES}
+    ${HEADERS}
+    ${RESOURCES}
+    ${QM_FILES}
+    ${PLATFORM_SOURCES}
+)
+
+if(WIN32)
+    set_target_properties(gwcert PROPERTIES
+        WIN32_EXECUTABLE "$<NOT:$<CONFIG:Debug>>"
+    )
+endif()
 
 target_include_directories(gwcert PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src

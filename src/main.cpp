@@ -5,14 +5,16 @@
 #include <QSettings>
 #include <QDir>
 #include <QDebug>
+#include <QIcon>
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     app.setApplicationName("GWCert");
-    app.setApplicationVersion("1.0.0");
+    app.setApplicationVersion("1.0.6");
     app.setOrganizationName("GWCert");
+    app.setWindowIcon(QIcon(":/icons/app.svg"));
 
     // Load translator based on saved language setting
     QTranslator translator;
@@ -42,7 +44,8 @@ int main(int argc, char *argv[])
     }
 
     MainWindow w;
-    w.setWindowTitle(QObject::tr("GWCert - Certificate Manager v1.0.0"));
+    w.setWindowIcon(app.windowIcon());
+    w.setWindowTitle(QObject::tr("GWCert - Certificate Manager v1.0.6"));
     w.resize(1000, 700);
 
     // Center on screen
