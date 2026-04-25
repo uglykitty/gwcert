@@ -34,7 +34,7 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git vcpkg
           .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg.exe install openssl:x64-windows
+          .\vcpkg\vcpkg.exe install openssl:x64-windows-release
 
       - name: Configure
         shell: pwsh
@@ -44,9 +44,9 @@ jobs:
             -A x64 `
             -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} `
             -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake" `
-            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DVCPKG_TARGET_TRIPLET=x64-windows-release `
             -DCMAKE_PREFIX_PATH="${env:QT_ROOT_DIR}" `
-            -DOPENSSL_ROOT_DIR="${{ github.workspace }}\vcpkg\installed\x64-windows"
+            -DOPENSSL_ROOT_DIR="${{ github.workspace }}\vcpkg\installed\x64-windows-release"
 
       - name: Build
         shell: pwsh
