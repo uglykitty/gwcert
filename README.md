@@ -113,7 +113,7 @@ CA 管理者负责建立和维护整个 PKI 基础设施，包括初始化目录
    ![CA 证书生成对话框](docs/screenshots/generate_ca_dialog.png)
 
 生成的文件：
-- `ca/ca.crt` — 根 CA 证书
+- `ca/ca.crt` — 根 CA 证书（需要分发给所有需要信任该 PKI 的客户端或验证方，作为证书链验证的信任锚）
 - `ca/private/ca.key` — 根 CA 私钥（需妥善保管）
 
 CA 根证书会自动以序列号 `00` 记录到 `index.txt` 数据库中。
