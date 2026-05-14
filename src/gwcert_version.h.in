@@ -1,0 +1,3 @@
+#pragma once
+
+#define GWCERT_VERSION "@PROJECT_VERSION@"

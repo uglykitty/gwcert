@@ -27,6 +27,7 @@
 #include <QFont>
 #include <QPushButton>
 #include <QActionGroup>
+#include <QCoreApplication>
 
 // ── Expiry date formatting helpers ─────────────────────────────────────────
 
@@ -719,7 +720,7 @@ void MainWindow::onAbout()
 {
     QMessageBox::about(this, tr("About GWCert"),
         tr("<h2>GWCert Certificate Manager</h2>"
-        "<p>Version 1.1.0</p>"
+        "<p>Version %1</p>"
         "<p>A certificate management tool built with Qt 6 + OpenSSL.</p>"
         "<p><b>Features:</b></p>"
         "<ul>"
@@ -746,7 +747,7 @@ void MainWindow::onAbout()
         "  crl/           - Certificate revocation lists\n"
         "  serial         - Serial number\n"
         "  index.txt      - Certificate database\n"
-        "</pre>"));
+        "</pre>").arg(QCoreApplication::applicationVersion()));
 }
 
 void MainWindow::onSwitchLanguage(const QString &lang)

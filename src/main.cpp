@@ -7,12 +7,13 @@
 #include <QDebug>
 #include <QIcon>
 #include "mainwindow.h"
+#include "gwcert_version.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     app.setApplicationName("GWCert");
-    app.setApplicationVersion("1.0.6");
+    app.setApplicationVersion(GWCERT_VERSION);
     app.setOrganizationName("GWCert");
     app.setWindowIcon(QIcon(":/icons/app.svg"));
 
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.setWindowIcon(app.windowIcon());
-    w.setWindowTitle(QObject::tr("GWCert - Certificate Manager v1.0.6"));
+    w.setWindowTitle(QObject::tr("GWCert - Certificate Manager v%1").arg(GWCERT_VERSION));
     w.resize(1000, 700);
 
     // Center on screen

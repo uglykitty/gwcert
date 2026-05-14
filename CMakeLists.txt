@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
-project(gwcert VERSION 1.0.6 LANGUAGES CXX)
+project(gwcert VERSION 1.0.8 LANGUAGES CXX)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gwcert_version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/generated/gwcert_version.h
+    @ONLY
+)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,6 +74,7 @@ endif()
 target_include_directories(gwcert PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs
+    ${CMAKE_CURRENT_BINARY_DIR}/generated
 )
 
 target_link_libraries(gwcert PRIVATE

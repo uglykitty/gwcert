@@ -4,8 +4,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>GWCert - Certificate Manager v1.0.0</source>
-        <translation>GWCert - 证书管理工具 v1.0.0</translation>
+        <source>GWCert - Certificate Manager v%1</source>
+        <translation>GWCert - 证书管理工具 v%1</translation>
     </message>
 </context>
 <context>
@@ -482,8 +482,8 @@ Records: %3</source>
         <translation>关于 GWCert</translation>
     </message>
     <message>
-        <source>&lt;h2&gt;GWCert Certificate Manager&lt;/h2&gt;&lt;p&gt;Version 1.1.0&lt;/p&gt;&lt;p&gt;Certificate management tool built with Qt 6 + OpenSSL.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Features:&lt;/b&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;PKI directory structure management&lt;/li&gt;&lt;li&gt;Automatic certificate serial management&lt;/li&gt;&lt;li&gt;Certificate issuance database (index.txt)&lt;/li&gt;&lt;li&gt;Generate self-signed CA root certificates&lt;/li&gt;&lt;li&gt;Generate Certificate Signing Requests (CSR)&lt;/li&gt;&lt;li&gt;Sign intermediate CA certificates&lt;/li&gt;&lt;li&gt;Sign server/client certificates&lt;/li&gt;&lt;li&gt;View certificate details&lt;/li&gt;&lt;li&gt;Verify certificate chains&lt;/li&gt;&lt;li&gt;Export PKCS#12 format&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;PKI Directory Structure:&lt;/b&gt;&lt;/p&gt;&lt;pre&gt;pki/
-  ca/            - CA certificates and keys
+        <source>&lt;h2&gt;GWCert Certificate Manager&lt;/h2&gt;&lt;p&gt;Version %1&lt;/p&gt;&lt;p&gt;A certificate management tool built with Qt 6 + OpenSSL.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Features:&lt;/b&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;PKI directory structure management&lt;/li&gt;&lt;li&gt;Automatic certificate serial number management&lt;/li&gt;&lt;li&gt;Certificate issuance database (index.txt)&lt;/li&gt;&lt;li&gt;Generate self-signed CA root certificates&lt;/li&gt;&lt;li&gt;Generate Certificate Signing Requests (CSR)&lt;/li&gt;&lt;li&gt;Sign intermediate CA certificates&lt;/li&gt;&lt;li&gt;Sign server/client certificates&lt;/li&gt;&lt;li&gt;View certificate details&lt;/li&gt;&lt;li&gt;Verify certificate chains&lt;/li&gt;&lt;li&gt;Export to PKCS#12 format&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;PKI Directory Structure:&lt;/b&gt;&lt;/p&gt;&lt;pre&gt;pki/
+  ca/            - CA certificates and private keys
   intermediate/  - Intermediate CAs
   certs/         - Issued certificates
   newcerts/      - Certificate archive
@@ -493,7 +493,7 @@ Records: %3</source>
   serial         - Serial number
   index.txt      - Certificate database
 &lt;/pre&gt;</source>
-        <translation>&lt;h2&gt;GWCert 证书管理工具&lt;/h2&gt;&lt;p&gt;版本 1.1.0&lt;/p&gt;&lt;p&gt;基于 Qt 6 + OpenSSL 构建的证书管理工具。&lt;/p&gt;&lt;p&gt;&lt;b&gt;功能：&lt;/b&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;PKI 目录结构管理&lt;/li&gt;&lt;li&gt;证书序列号自动管理&lt;/li&gt;&lt;li&gt;证书签发数据库 (index.txt)&lt;/li&gt;&lt;li&gt;生成自签名CA根证书&lt;/li&gt;&lt;li&gt;生成证书签名请求 (CSR)&lt;/li&gt;&lt;li&gt;签署中间CA证书&lt;/li&gt;&lt;li&gt;签署服务器/客户端证书&lt;/li&gt;&lt;li&gt;查看证书详细信息&lt;/li&gt;&lt;li&gt;验证证书链&lt;/li&gt;&lt;li&gt;导出 PKCS#12 格式&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;PKI 目录结构：&lt;/b&gt;&lt;/p&gt;&lt;pre&gt;pki/
+        <translation>&lt;h2&gt;GWCert 证书管理工具&lt;/h2&gt;&lt;p&gt;版本 %1&lt;/p&gt;&lt;p&gt;基于 Qt 6 + OpenSSL 构建的证书管理工具。&lt;/p&gt;&lt;p&gt;&lt;b&gt;功能：&lt;/b&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;PKI 目录结构管理&lt;/li&gt;&lt;li&gt;证书序列号自动管理&lt;/li&gt;&lt;li&gt;证书签发数据库 (index.txt)&lt;/li&gt;&lt;li&gt;生成自签名CA根证书&lt;/li&gt;&lt;li&gt;生成证书签名请求 (CSR)&lt;/li&gt;&lt;li&gt;签署中间CA证书&lt;/li&gt;&lt;li&gt;签署服务器/客户端证书&lt;/li&gt;&lt;li&gt;查看证书详细信息&lt;/li&gt;&lt;li&gt;验证证书链&lt;/li&gt;&lt;li&gt;导出 PKCS#12 格式&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;b&gt;PKI 目录结构：&lt;/b&gt;&lt;/p&gt;&lt;pre&gt;pki/
   ca/            - CA证书与私钥
   intermediate/  - 中间CA
   certs/         - 已签发证书
