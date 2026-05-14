@@ -106,7 +106,7 @@ CertSignDialog::CertSignDialog(PkiStore *store, QWidget *parent)
     optForm->addRow(sanHint);
 
     m_sanEdit = new QTextEdit(this);
-    m_sanEdit->setPlaceholderText("DNS:example.com\nIP:10.0.0.1");
+    m_sanEdit->setPlaceholderText("DNS:example.com IP:10.0.0.1");
     optForm->addRow("SAN:", m_sanEdit);
 
     mainLayout->addWidget(optGroup);
